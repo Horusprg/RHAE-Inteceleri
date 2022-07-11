@@ -75,7 +75,6 @@ for i in range(1000):
     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     th = cv.threshold(gray, 200, 255,
         cv.THRESH_BINARY_INV)[1]
-
     # find the largest contour in the threshold image
     cnts = cv.findContours(th.copy(), cv.RETR_EXTERNAL,
         cv.CHAIN_APPROX_SIMPLE)
