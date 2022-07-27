@@ -1,12 +1,15 @@
+from turtle import bgcolor
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import cv2 as cv
 import imutils
-colors = ['red', 'green', 'blue', 'gold', 'mediumturquoise', 'magenta', 'black', 'yellow', 'orange', 'brown']
+import random
+colors = ['red', 'green', 'blue', 'gold', 'mediumturquoise', 'magenta', 'black', 'yellow', 'orange', 'brown', "grey", "magenta"]
 # Equation of ring cyclide
 # see https://en.wikipedia.org/wiki/Dupin_cyclide
-for j in range(10):
+for j in range(20):
+    color1, color2, color3, backc = random.choices(colors, k=4)
     fig = go.Figure(data=[
         go.Mesh3d(
             # 8 vertices of a cube
@@ -14,9 +17,9 @@ for j in range(10):
             y=[0, 1, 1, 0, 0, 1, 1, 0],
             z=[0, 0, 0, 0, 1, 1, 1, 1],
             colorbar_title='z',
-            colorscale=[[0, colors[j]],
-                        [0.5, colors[j]],
-                        [1, colors[j]]],
+            colorscale=[[0, color1],
+                        [0.5, color2],
+                        [1, color3]],
             # Intensity of each vertex, which will be interpolated and color-coded
             intensity = np.linspace(0, 1, 12, endpoint=True),
             intensitymode='cell',
@@ -71,16 +74,16 @@ for j in range(10):
         camera = dict(
             up=dict(x=upRand[i][0], y=upRand[i][1], z=upRand[i][2]),
             center=dict(x=centerRand[i][0], y=centerRand[i][1], z=centerRand[i][1]),
-            eye=dict(x=1+eyeRand[i][0], y=1+eyeRand[i][1], z=1+eyeRand[i][2])
+            eye=dict(x=1.5+eyeRand[i][0], y=1.5+eyeRand[i][1], z=1.5+eyeRand[i][2])
         )
-        fig.update_layout(scene_camera=camera)
+        fig.update_layout(scene_camera=camera, paper_bgcolor = backc)
         place = ""
         if i<700:
             place = "dataset/train/"
         elif i>=700 and i <900:
-            place = "dataset/test/"
-        elif i>=900:
             place = "dataset/valid/"
+        elif i>=900:
+            place = "dataset/test/"
 
         fig.write_image(place+"images/cube"+str(i+j*1000)+".png")
         image = cv.imread(place+"images/cube"+str(i+j*1000)+".png")
